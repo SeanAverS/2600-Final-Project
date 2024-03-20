@@ -7,6 +7,11 @@
     config.LOG_FILE = `${__dirname}/../logs/nodejs.log`
     config.MEMBERS = `${__dirname}/../../models/data/members.json`
     config.USERS = `${__dirname}/../../models/data/users.json`
+
+    // access config.js API Keys
+    const googlePlacesAPIKey = config.GOOGLE_PLACES_API_KEY
+    const geocodingAPIKey = config.GOOGLE_GEOCODING_API_KEY
+
     config.logFile = (request, logs) => {
         log = {}
         log.date = new Date()

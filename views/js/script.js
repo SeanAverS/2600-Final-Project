@@ -188,4 +188,66 @@
 
     })
     //----------------------------------------------------
+    const sampleData = [
+        { name: "Restaurant 1", address: "123 Restaurant St, City, Country", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
+        { name: "Restaurant 2", address: "456 Restaurant St, City, Country", description: "Sed et nunc vitae elit posuere consequat." },
+        { name: "Restaurant 3", address: "789 Restaurant St, City, Country", description: "Duis malesuada eleifend turpis, vel euismod sapien tincidunt non." },
+        { name: "Restaurant 4", address: "101112 Restaurant St, City, Country", description: "Phasellus ultrices, leo nec scelerisque elementum." },
+        { name: "Restaurant 1", address: "123 Restaurant St, City, Country", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
+        { name: "Restaurant 2", address: "456 Restaurant St, City, Country", description: "Sed et nunc vitae elit posuere consequat." },
+        { name: "Restaurant 3", address: "789 Restaurant St, City, Country", description: "Duis malesuada eleifend turpis, vel euismod sapien tincidunt non." },
+        { name: "Restaurant 4", address: "101112 Restaurant St, City, Country", description: "Phasellus ultrices, leo nec scelerisque elementum." },
+        { name: "Restaurant 1", address: "123 Restaurant St, City, Country", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
+        { name: "Restaurant 2", address: "456 Restaurant St, City, Country", description: "Sed et nunc vitae elit posuere consequat." },
+        { name: "Restaurant 3", address: "789 Restaurant St, City, Country", description: "Duis malesuada eleifend turpis, vel euismod sapien tincidunt non." },
+        { name: "Restaurant 4", address: "101112 Restaurant St, City, Country", description: "Phasellus ultrices, leo nec scelerisque elementum." },
+        { name: "Restaurant 2", address: "456 Restaurant St, City, Country", description: "Sed et nunc vitae elit posuere consequat." },
+        { name: "Restaurant 3", address: "789 Restaurant St, City, Country", description: "Duis malesuada eleifend turpis, vel euismod sapien tincidunt non." },
+        { name: "Restaurant 4", address: "101112 Restaurant St, City, Country", description: "Phasellus ultrices, leo nec scelerisque elementum." }
+      
+    ];
+
+    const cardContainer = document.getElementById('cardContainer');
+    const loadMoreButton = document.getElementById('loadMore');
+
+    let currentIndex = 0;
+
+    function createCard(data) {
+        const card = document.createElement('div');
+        card.classList.add('card');
+        card.innerHTML = `
+            <img src="css/bacground.jpg" alt="Restaurant Image">
+            <div class="card-content">
+                <h4>${data.name}</h4>
+                <p>${data.address}</p>
+                <p class="description">${data.description}</p>
+            </div>
+        `;
+        cardContainer.appendChild(card);
+    }
+
+    function loadMoreCards() {
+        const maxIndex = Math.min(currentIndex + 6, sampleData.length);
+        for (let i = currentIndex; i < maxIndex; i++) {
+            createCard(sampleData[i]);
+        }
+        currentIndex = maxIndex;
+        if (currentIndex >= sampleData.length) {
+            loadMoreButton.style.display = 'none';
+        }
+    }
+
+    loadMoreButton.addEventListener('click', loadMoreCards);
+
+    loadMoreCards();
+
+    window.addEventListener('scroll', () => {
+        const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+        if (scrollTop + clientHeight >= scrollHeight - 5 && currentIndex < sampleData.length) {
+            loadMoreCards();
+        }
+    });
+
+
+    
 })()

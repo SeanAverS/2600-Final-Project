@@ -1,13 +1,13 @@
 (() => {
     console.log(`current directory is ${__dirname}`)
     const homeController = require(`${__dirname}/../controllers/homeController`)
-    const memberController = require(`${__dirname}/../controllers/memberController`) 
+    const memberController = require(`${__dirname}/../controllers/memberController`)
     const config = require(`${__dirname}/config/config`)
     const utils = require(`${__dirname}/utils`)
-    const express = require("express")   
+    const express = require("express")
 
     const app = express()
-   
+
     app.use(express.static(config.ROOT))
     app.use(express.json())
     app.use(express.urlencoded({ extended: false }))
@@ -16,9 +16,12 @@
         next()
     })
     app.use(homeController)
-    app.use(memberController)   
-   
-        
+    app.use(memberController)
+
+    // access config.js API Keys
+    const googlePlacesAPIKey = config.GOOGLE_PLACES_API_KEY
+    const geocodingAPIKey = config.GOOGLE_GEOCODING_API_KEY
+
 
     // Start Node.js HTTP webapp
     app.listen(config.PORT, "localhost", () => {

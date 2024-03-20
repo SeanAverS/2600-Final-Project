@@ -216,7 +216,7 @@
         const card = document.createElement('div');
         card.classList.add('card');
         card.innerHTML = `
-            <img src="https://via.placeholder.com/300" alt="Restaurant Image">
+            <img src="css/bacground.jpg" alt="Restaurant Image">
             <div class="card-content">
                 <h4>${data.name}</h4>
                 <p>${data.address}</p>

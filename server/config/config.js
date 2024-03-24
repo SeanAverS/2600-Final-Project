@@ -7,6 +7,12 @@
     config.LOG_FILE = `${__dirname}/../logs/nodejs.log`
     config.MEMBERS = `${__dirname}/../../models/data/members.json`
     config.USERS = `${__dirname}/../../models/data/users.json`
+
+    // API keys 
+    config.GOOGLE_PLACES_API_KEY = 'AIzaSyAXDKqzSdnA1y8586x4Lo3MtVP2vSM2q54'
+    config.GOOGLE_GEOCODING_API_KEY = 'AIzaSyA73mUKFtWkJFVk8UWVAmGnlIbb94fNkZs'
+
+
     config.logFile = (request, logs) => {
         log = {}
         log.date = new Date()

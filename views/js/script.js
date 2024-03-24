@@ -214,7 +214,7 @@
 
     function createCard(data) {
         const card = document.createElement('div');
-        card.classList.add('card');
+        card.classList.add('cardHome'); 
         card.innerHTML = `
             <img src="css/bacground.jpg" alt="Restaurant Image">
             <div class="card-content">
@@ -225,6 +225,7 @@
         `;
         cardContainer.appendChild(card);
     }
+    
 
     function loadMoreCards() {
         const maxIndex = Math.min(currentIndex + 6, sampleData.length);
@@ -247,7 +248,19 @@
             loadMoreCards();
         }
     });
+    const foodIconsContainer = document.querySelector('.food-icons-container');
+  const navArrows = document.querySelectorAll('.nav-arrow');
 
-
+  // Add event listeners to navigation arrows
+  navArrows.forEach(arrow => {
+    arrow.addEventListener('click', () => {
+      const direction = arrow.classList.contains('left') ? -1 : 1;
+      foodIconsContainer.scrollBy({
+        left: direction * (foodIconsContainer.offsetWidth / 2),
+        behavior: 'smooth'
+      });
+    });
+  });
+  
     
 })()

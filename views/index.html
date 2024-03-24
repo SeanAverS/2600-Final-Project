@@ -7,18 +7,207 @@
     <title>Document</title>
     <link rel="stylesheet" href="css/styles.min.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css" />
+
 
 </head>
 
 <body>
-    <div class="background">
-        <div class="search-bar">
-            <input type="text" class="search-input" placeholder="Search...">
-            <button class="search-button">Search</button>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary ">
+            <div class="container-fluid" role="banner">
+                <a class="navbar-brand 2">SavorySpot</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 h6">
+                        <li class="nav-item ml-4 active">
+                            <a class="nav-link btn btn-secondary" aria-current="page" data-page="home">Home</a>
+                        </li>
+                        <li class="nav-item dropdown" data-authenticated>
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="menu"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Member Page
+                            </a>
+                            <ul class="dropdown-menu" role="listbox" aria-labelledby="navbarDropdown">
+                                <li>
+                                    <a class="dropdown-item h3" role="menuitem" data-page="posts">
+                                        Posts</a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider" />
+                                </li>
+                                <li>
+                                    <a class="dropdown-item h3" role="menuitem" data-page="search">Search Posts</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item ml-4">
+                            <a class="nav-link btn btn-secondary" data-page="about">About</a>
+                        </li>
+                    </ul>
+                    <form class="d-flex text-end h3 text-white">
+                        <div data-nonAuthenticated>
+                            <a data-page="register" class="btn btn-seconadry">register</a>
+                            <a data-page="login" class="btn btn-seconadry">login</a>
+                        </div>
+                        <div data-authenticated><i class="fas fa-user-circle" alt="person"
+                                width="30"></i>&nbsp;<span></span><button class="btn btn-seconadry text-end"
+                                id="signout">Logout</button></div>
+                    </form>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <section id="Home">
+        <div class="food-icons-container" id="foodIconsContainer">
+
+            <div class="food-icon pizza-icon"><i class="fas fa-pizza-slice"></i></div>
+            <div class="food-icon burger-icon"><i class="fas fa-hamburger"></i></div>
+            <div class="food-icon ice-cream-icon"><i class="fas fa-ice-cream"></i></div>
+            <div class="food-icon pizza-icon"><i class="fas fa-bread-slice"></i></div>
+            <div class="food-icon burger-icon"><i class="fas fa-cheese"></i></div>
+            <div class="food-icon ice-cream-icon"><i class="fas fa-drumstick-bite"></i></div>
+            <div class="food-icon pizza-icon"><i class="fas fa-hamburger"></i></div>
+            <div class="food-icon burger-icon"><i class="fas fa-hotdog"></i></div>
+            <div class="food-icon ice-cream-icon"><i class="fas fa-pepper-hot"></i></div>
+            <div class="food-icon pizza-icon"><i class="fas fa-apple-alt "></i></div>
+            <div class="food-icon burger-icon"><i class="fas fa-lemon"></i></div>
+            <div class="food-icon ice-cream-icon"><i class="fas fa-ice-cream"></i></div>
+            <div class="food-icon pizza-icon"><i class="fas fa-pizza-slice"></i></div>
+            <div class="food-icon burger-icon"><i class="fas fa-hamburger"></i></div>
+            <div class="food-icon ice-cream-icon"><i class="fas fa-ice-cream"></i></div>
+            <div class="food-icon pizza-icon"><i class="fas fa-pizza-slice"></i></div>
+            <div class="food-icon burger-icon"><i class="fas fa-hamburger"></i></div>
+            <div class="food-icon ice-cream-icon"><i class="fas fa-ice-cream"></i></div>
+            <div class="food-icon pizza-icon"><i class="fas fa-pizza-slice"></i></div>
+            <div class="food-icon burger-icon"><i class="fas fa-hamburger"></i></div>
+            <div class="food-icon ice-cream-icon"><i class="fas fa-ice-cream"></i></div>
+            <div class="food-icon pizza-icon"><i class="fas fa-pizza-slice"></i></div>
+            <div class="food-icon burger-icon"><i class="fas fa-hamburger"></i></div>
+            <div class="food-icon ice-cream-icon"><i class="fas fa-ice-cream"></i></div>
+            <button class="nav-arrow left"><i class="fas fa-chevron-left"></i></button>
+            <button class="nav-arrow right"><i class="fas fa-chevron-right"></i></button>
+
         </div>
+
+
+
+        <div class="background">
+
+
+
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Enter your text here...">
+                <button class="search-button">Search</button>
+            </div>
+        </div>
+        <div class="card-container" id="cardContainer"></div>
+        <div id="loadMore">Load More</div>
+    </section>
+    <section id="Register">
+        <div class="card">
+            <div class="card-header bg-info text-white text-center h2" role="heading">
+                Sign Up
+            </div>
+            <div class="card-body text-white h5">
+                <form class="row g-3">
+                    <div class="mb-3 row">
+                        <label for="email" class="col-sm-2 col-form-label">Email</label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control-plaintext" name="email"
+                                placeholder="email@example.com" required>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="password" class="col-sm-2 col-form-label">Password</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" name="password" minlength="8" maxlength="30">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="confirm" class="col-sm-2 col-form-label">Confirm Password</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" id="confirm" name="confirm" minlength="8"
+                                maxlength="30">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="alert alert-warning h3" name="error"></div>
+                    </div>
+
+                    <div class="input-group mb-3">
+
+                        <div class="btn-group btn-lg text-white h4 text-end" role="group" aria-label="authentication">
+                            <button type="reset" class="btn btn-info text-end">Clear</button>
+                            <button type="submit" class="btn btn-primary text-end" id="signup">Sign up</button>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <section id="Login">
+        <div class="card">
+            <div class="card-header bg-info text-white text-center h2" role="heading">
+                Sign In
+            </div>
+            <div class="card-body text-white h5">
+                <form class="row g-3">
+                    <div class="mb-3 row">
+                        <label for="email" class="col-sm-2 col-form-label">Email</label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control-plaintext" name="email"
+                                placeholder="email@example.com" required>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="password" class="col-sm-2 col-form-label">Password</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" name="password" minlength="8" maxlength="30">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+
+                        <div class="alert alert-warning h3" name="error"></div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="btn-group btn-lg text-white h4 text-end" role="group" aria-label="authentication">
+                            <button type="reset" class="btn btn-info text-end">Clear</button>
+                            <button type="submit" class="btn btn-primary text-end" id="signin">Sign in</button>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <div class="h4 text-center">
+        <hr>
+        <br />
+        <footer id="footer">
+            <span class="h4">Follow Us</span>&nbsp;&nbsp;
+            <button class="btn btn-danger">
+                <a href="https://www.youtube.com" class="text-white"><i class="bi bi-youtube h3"
+                        arria-label="youtube"></i></a></button>&nbsp;
+            <button class="btn btn-primary">
+                <a href="https://www.twitter.com" class="text-white"><i class="bi bi-twitter h3"
+                        aria-label="twitter"></i></a></button>&nbsp;
+            <button class="btn btn-success">
+                <a href="https://www.whatsapp.com/" class="text-white">&nbsp;
+                    <i class="bi bi-whatsapp h3" aria-label="whatsapp"></i>&nbsp;</a></button>&nbsp;
+            <button class="btn btn-warning">
+                <a href="https://www.instagram.com/" class="text-white"><i class="bi bi-instagram h3"
+                        aria-label="instagram"></i></a>
+            </button> <br> <br>
+            <div class="text-white h2">
+                <kbd> &copy; <span></span>. Project CPSC 2600.  All Rights Reserved. </kbd>
+            </div>
+        </footer>
     </div>
-    <div class="card-container" id="cardContainer"></div>
-    <div id="loadMore">Load More</div>
+    </div>
 
 
 

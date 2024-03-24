@@ -8,7 +8,7 @@
     justify-content: space-between;
 }
 
-.card {
+.cardHome {
 
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: 0.3s;
@@ -19,11 +19,11 @@
 
 
 
-.card:hover {
+.cardHome:hover {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
-.card img {
+.cardHome img {
     width: 100%;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
@@ -33,17 +33,17 @@
     padding: 20px;
 }
 
-.card h4 {
+.cardHome h4 {
     font-size: 20px;
     margin-bottom: 10px;
 }
 
-.card p {
+.cardHome p {
     font-size: 16px;
     margin-bottom: 10px;
 }
 
-.card .description {
+.cardHome .description {
     font-size: 14px;
     color: #666;
 }
@@ -98,6 +98,51 @@
 .search-button:hover {
     background-color: #0056b3;
 }
+.food-icons-container {
+    position: relative;
+    overflow: hidden; 
+    width: 100%;
+    display: flex; 
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgb(38, 99, 79);
+
+  }
+
+
+  .nav-arrow {
+
+    position: fixed;
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+    padding: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1;
+  }
+
+  .nav-arrow.left {
+    left: 10px;
+  }
+
+  .nav-arrow.right {
+    right: 10px;
+  }
+
+  .food-icon {
+    flex: 0 0 auto;
+
+    cursor: pointer;
+    width:60px;
+    height:60px;
+   padding-top: 10px;
+   padding: auto;
+    text-align: center;
+    color:goldenrod;
+
+   
+  }
+
 @media screen and (max-width: 768px) {
     .card {
         width: calc(50% - 20px); 

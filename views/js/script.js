@@ -56,6 +56,9 @@
     const signup = async (event) => {
         // prevent refreshing the page
         event.preventDefault()
+        window.history.pushState(navigation.register, "", `/${navigation.register.url}`);
+    displaySection(navigation.register);
+        
         email = document.querySelector('#Register input[name="email"]').value
         let password = document.querySelector('#Register input[name="password"]').value
         let confirm = document.querySelector('#confirm').value
@@ -80,6 +83,8 @@
             show(registerWarning)
         }
     }
+
+    document.querySelector("#signup").onclick = signup;
     const signout = async (event) => {
         event.preventDefault()
         console.log(email)

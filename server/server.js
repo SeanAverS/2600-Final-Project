@@ -21,29 +21,55 @@ const memberController = require(`${__dirname}/../controllers/memberController`)
 app.use(homeController);
 app.use(memberController);
 
+// signup endpoint
+app.post("/signup", async (req, res) => {
+    try {
+        // user input
+        const { email, password } = req.body;
+
+        // validate input
+        if (!email || !password) {
+            return res.status(400).json({ error: "Email and password are required" });
+        }
+
+        const existingUser = await db.getUserByEmail(email);
+        if (existingUser) {
+            return res.status(400).json({ error: "Email is already registered" });
+        }
+
+        const hashedPassword = await utils.hashPassword(password);
+
+        const newUser = await db.createUser(email, hashedPassword);
+
+        res.status(201).json({ success: "User created successfully" });
+    } catch (error) {
+        console.error("Error signing up user:", error);
+        res.status(500).json({ error: "Failed to sign up user" });
+    }
+});
+
 // Endpoint to fetch nearby restaurants
 app.get("/restaurants", async (req, res) => {
     try {
         const { latitude, longitude } = req.query;
 
-        // Make a request to Google Places API using Axios
+        // axios
         const response = await axios.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json", {
             params: {
                 location: `${latitude},${longitude}`,
-                radius: 5000, // Example radius (in meters) for nearby search
+                radius: 5000, 
                 type: "restaurant",
                 key: config.GOOGLE_PLACES_API_KEY
             }
         });
 
-        // Extract relevant restaurant data from the API response
+        // restaurant data 
         const restaurants = response.data.results.map(result => ({
             name: result.name,
             address: result.vicinity,
-            // Add more relevant data as needed
         }));
 
-        // Send the list of nearby restaurants to the client
+        // nearby restaurants
         res.json(restaurants);
     } catch (error) {
         console.error("Error fetching nearby restaurants:", error);

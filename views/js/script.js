@@ -114,7 +114,7 @@
         else if (reply.success) {
             console.log(reply, reply)
             window.history.pushState(navigation.posts, "", `/${navigation.posts.url}`)
-            displaySection(navigation.posts)
+                displaySection(navigation.posts)
             authorize(true)
             document.querySelector('[data-authenticated] > span').innerHTML = `Welcome ${email}!`
         }
@@ -178,16 +178,16 @@
             }
         }
         authorize(false)
-        const noticeDialog = document.querySelector("#noticeDialog")
-        const errors = document.querySelectorAll('section div[name="error"]')
-        errors.forEach(error => hide(error))
+        // const noticeDialog = document.querySelector("#noticeDialog")
+        // const errors = document.querySelectorAll('section div[name="error"]')
+        // errors.forEach(error => hide(error))
         
-        noticeDialog.showModal()
-        document.querySelector("#noticeButton").onclick = (event) => {
-            event.preventDefault()
-            if (document.querySelector("#agree").checked)
-                noticeDialog.close()
-        }
+        // noticeDialog.showModal()
+        // document.querySelector("#noticeButton").onclick = (event) => {
+        //     event.preventDefault()
+        //     if (document.querySelector("#agree").checked)
+        //         noticeDialog.close()
+        // }
         document.querySelector("#signup").onclick = signup
         document.querySelector("#signout").onclick = signout
         document.querySelector("#signin").onclick = signin

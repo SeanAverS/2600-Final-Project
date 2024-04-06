@@ -6,6 +6,7 @@
         about: { title: "About Page", url: "About", section: "About" },
         posts: { title: "Member Page", url: "Member/Posts", section: "Posts" },
         search: { title: "Member Page", url: "Member/Search", section: "Search Posts" },
+        orders: { title: "Orders", url: "Orders", section: "Orders" },
         users: { title: "Admin Page", url: "Admin/Users", section: "Manage Users" },
         content: { title: "Admin Page", url: "Admin/Content", section: "Manage Content" },
         register: { title: "Register Page", url: "Account/Register", section: "Register" },
@@ -93,8 +94,8 @@
             console.log('inside signout')
             console.log(reply.success)
             console.log(reply, reply)
-            window.history.pushState(navigation.home, "", `/${navigation.home.url}`)
-            displaySection(navigation.home)
+            window.history.pushState(navigation.posts, "", `/${navigation.posts.url}`)
+            displaySection(navigation.posts)
             authorize(false)
         } else {
             console.log(reply)

@@ -73,8 +73,8 @@
             }
             else if (reply.success) {
                 console.log(reply, reply)
-                window.history.pushState(navigation.posts, "", `/${navigation.posts.url}`)
-                displaySection(navigation.posts)
+                window.history.pushState(navigation.home, "", `/${navigation.home.url}`)
+                displaySection(navigation.home)
                 authorize(true)
                 document.querySelector('[data-authenticated] > span').innerHTML = `Welcome ${email}!`
             }
@@ -94,8 +94,8 @@
             console.log('inside signout')
             console.log(reply.success)
             console.log(reply, reply)
-            window.history.pushState(navigation.posts, "", `/${navigation.posts.url}`)
-            displaySection(navigation.posts)
+            window.history.pushState(navigation.home, "", `/${navigation.home.url}`)
+            displaySection(navigation.home)
             authorize(false)
         } else {
             console.log(reply)
@@ -113,8 +113,8 @@
         }
         else if (reply.success) {
             console.log(reply, reply)
-            window.history.pushState(navigation.posts, "", `/${navigation.posts.url}`)
-                displaySection(navigation.posts)
+            window.history.pushState(navigation.home, "", `/${navigation.home.url}`)
+                displaySection(navigation.home)
             authorize(true)
             document.querySelector('[data-authenticated] > span').innerHTML = `Welcome ${email}!`
         }

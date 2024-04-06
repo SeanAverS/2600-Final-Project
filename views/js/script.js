@@ -191,68 +191,72 @@
         document.querySelector("#signout").onclick = signout
         document.querySelector("#signin").onclick = signin
 
+    // Fetch nearby restaurants using user's current location
+        fetchNearbyRestaurants();
     })
     //----------------------------------------------------
-    const sampleData = [
-        { name: "Restaurant 1", address: "123 Restaurant St, City, Country", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
-        { name: "Restaurant 2", address: "456 Restaurant St, City, Country", description: "Sed et nunc vitae elit posuere consequat." },
-        { name: "Restaurant 3", address: "789 Restaurant St, City, Country", description: "Duis malesuada eleifend turpis, vel euismod sapien tincidunt non." },
-        { name: "Restaurant 4", address: "101112 Restaurant St, City, Country", description: "Phasellus ultrices, leo nec scelerisque elementum." },
-        { name: "Restaurant 1", address: "123 Restaurant St, City, Country", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
-        { name: "Restaurant 2", address: "456 Restaurant St, City, Country", description: "Sed et nunc vitae elit posuere consequat." },
-        { name: "Restaurant 3", address: "789 Restaurant St, City, Country", description: "Duis malesuada eleifend turpis, vel euismod sapien tincidunt non." },
-        { name: "Restaurant 4", address: "101112 Restaurant St, City, Country", description: "Phasellus ultrices, leo nec scelerisque elementum." },
-        { name: "Restaurant 1", address: "123 Restaurant St, City, Country", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit." },
-        { name: "Restaurant 2", address: "456 Restaurant St, City, Country", description: "Sed et nunc vitae elit posuere consequat." },
-        { name: "Restaurant 3", address: "789 Restaurant St, City, Country", description: "Duis malesuada eleifend turpis, vel euismod sapien tincidunt non." },
-        { name: "Restaurant 4", address: "101112 Restaurant St, City, Country", description: "Phasellus ultrices, leo nec scelerisque elementum." },
-        { name: "Restaurant 2", address: "456 Restaurant St, City, Country", description: "Sed et nunc vitae elit posuere consequat." },
-        { name: "Restaurant 3", address: "789 Restaurant St, City, Country", description: "Duis malesuada eleifend turpis, vel euismod sapien tincidunt non." },
-        { name: "Restaurant 4", address: "101112 Restaurant St, City, Country", description: "Phasellus ultrices, leo nec scelerisque elementum." }
-      
-    ];
 
+    async function fetchNearbyRestaurants(latitude, longitude) {
+        try {
+            // Fetch nearby restaurants from the server using latitude and longitude
+            const response = await fetch(`/restaurants?latitude=${latitude}&longitude=${longitude}`);
+            const data = await response.json();
+            // Call the updateCardComponent function to display the fetched restaurants
+            updateCardComponent(data);
+        } catch (error) {
+            console.error("Error fetching nearby restaurants:", error);
+            // Handle error
+        }
+    }
+    async function fetchRandomFoodImage() {
+        const response = await fetch('https://source.unsplash.com/featured/?food');
+        return response.url;
+    }
+
+    // Define the updateCardComponent function to create cards for restaurant data
+  // Function to update the card component with restaurant data
+async function updateCardComponent(restaurants) {
     const cardContainer = document.getElementById('cardContainer');
-    const loadMoreButton = document.getElementById('loadMore');
-
-    let currentIndex = 0;
-
-    function createCard(data) {
+    cardContainer.innerHTML = ''; // Clear previous cards
+    // Iterate over the fetched restaurant data and create card elements
+    for (const restaurant of restaurants) {
         const card = document.createElement('div');
-        card.classList.add('cardHome'); 
+        card.classList.add('cardHome');
+        const restaurantName = restaurant.name;
+        const imageUrl = await fetchRandomFoodImage();
         card.innerHTML = `
-            <img src="css/bacground.jpg" alt="Restaurant Image">
+            <img src="${imageUrl}" alt="${restaurantName} Image">
             <div class="card-content">
-                <h4>${data.name}</h4>
-                <p>${data.address}</p>
-                <p class="description">${data.description}</p>
+                <h4>${restaurantName}</h4>
+                <p>${restaurant.address}</p>
+                <p class="description">${restaurant.description}</p>
             </div>
         `;
         cardContainer.appendChild(card);
     }
-    
+}
 
-    function loadMoreCards() {
-        const maxIndex = Math.min(currentIndex + 6, sampleData.length);
-        for (let i = currentIndex; i < maxIndex; i++) {
-            createCard(sampleData[i]);
-        }
-        currentIndex = maxIndex;
-        if (currentIndex >= sampleData.length) {
-            loadMoreButton.style.display = 'none';
+
+    // Function to get the user's current location and fetch nearby restaurants
+    function getUserLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                const { latitude, longitude } = position.coords;
+                // Call fetchNearbyRestaurants with obtained latitude and longitude
+                fetchNearbyRestaurants(latitude, longitude);
+            }, (error) => {
+                console.error("Error getting user location:", error);
+                // Handle error
+            });
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+            // Handle error
         }
     }
 
-    loadMoreButton.addEventListener('click', loadMoreCards);
+    // Call getUserLocation when the page loads to fetch nearby restaurants
+    window.addEventListener('load', getUserLocation);
 
-    loadMoreCards();
-
-    window.addEventListener('scroll', () => {
-        const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-        if (scrollTop + clientHeight >= scrollHeight - 5 && currentIndex < sampleData.length) {
-            loadMoreCards();
-        }
-    });
     const foodIconsContainer = document.querySelector('.food-icons-container');
   const navArrows = document.querySelectorAll('.nav-arrow');
 

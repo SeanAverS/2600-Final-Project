@@ -48,6 +48,43 @@ app.post("/signup", async (req, res) => {
     }
 });
 
+// sign-in endpoint
+app.post("/signin", async (req, res) => {
+    try {
+        // user input
+        const { email, password } = req.body;
+
+        // validate input
+        if (!email || !password) {
+            return res.status(400).json({ error: "Email and password are required" });
+        }
+
+        // Perform authentication logic (e.g., querying the database)
+        const user = await db.getUserByEmail(email);
+
+        // Check if the user exists
+        if (!user) {
+            return res.status(401).json({ error: "Invalid email or password" });
+        }
+
+        // Check if the password matches
+        const passwordMatch = await utils.comparePassword(password, user.password);
+        if (!passwordMatch) {
+            return res.status(401).json({ error: "Invalid email or password" });
+        }
+
+        // If email and password are correct, generate a token or set a session to indicate the user is authenticated
+        // For example, you can use JWT for token-based authentication
+
+        // Return success response
+        res.status(200).json({ success: "User authenticated successfully" });
+    } catch (error) {
+        console.error("Error signing in user:", error);
+        res.status(500).json({ error: "Failed to sign in user" });
+    }
+});
+
+
 // Endpoint to fetch nearby restaurants
 app.get("/restaurants", async (req, res) => {
     try {

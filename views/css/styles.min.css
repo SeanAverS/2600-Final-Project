@@ -44,17 +44,7 @@
     margin-bottom: 10px;
 }
 
-.cardHome .description {
-    font-size: 14px;
-    color: #666;
-}
 
-#loadMore {
-    text-align: center;
-    margin-top: 20px;
-    cursor: pointer;
-    color: blue;
-}
 
 .background {
     background-image: url('bacground.jpg');
@@ -143,8 +133,34 @@
    
   }
 
+  .menu-button {
+    background-color:rgb(38, 99, 79);
+    color: #fff;
+    padding: 5px 10px; 
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 30px;
+}
+
+.directions-button {
+    background-color:rgb(38, 99, 79);
+    padding:20px;
+    color: #fff;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Hover effect */
+.menu-button:hover, .directions-button:hover {
+    opacity: 0.8;
+}
+
+
 @media screen and (max-width: 768px) {
-    .card {
+    .cardHome {
         width: calc(50% - 20px); 
     }
     .search-bar{
@@ -153,7 +169,7 @@
 }
 
 @media screen and (max-width: 576px) {
-    .card {
+    .cardHome {
         width: calc(100% - 20px); 
     }
 }

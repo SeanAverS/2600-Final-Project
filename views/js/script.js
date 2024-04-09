@@ -192,72 +192,123 @@
         document.querySelector("#signout").onclick = signout
         document.querySelector("#signin").onclick = signin
 
-    // Fetch nearby restaurants using user's current location
-        fetchNearbyRestaurants();
-    })
-    //----------------------------------------------------
+    getUserLocation();
+})
+//----------------------------------------------------
+const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', (event) => {
+        const keyword = event.target.value.trim();
+        // Get user's current location and pass it to fetchNearbyRestaurants
+        getUserLocation(keyword);
+    });
 
-    async function fetchNearbyRestaurants(latitude, longitude) {
+    async function fetchNearbyRestaurants(latitude, longitude, keyword = '', limit = 30, userLocation) {
         try {
-            // Fetch nearby restaurants from the server using latitude and longitude
-            const response = await fetch(`/restaurants?latitude=${latitude}&longitude=${longitude}`);
+            const params = new URLSearchParams({
+                latitude: latitude,
+                longitude: longitude,
+                limit: limit,
+                keyword: keyword
+            });
+            const url = `/restaurants?${params.toString()}`;
+            const response = await fetch(url);
             const data = await response.json();
-            // Call the updateCardComponent function to display the fetched restaurants
-            updateCardComponent(data);
+            updateCardComponent(data, userLocation);
         } catch (error) {
             console.error("Error fetching nearby restaurants:", error);
-            // Handle error
         }
     }
-    async function fetchRandomFoodImage() {
-        const response = await fetch('https://source.unsplash.com/featured/?food');
-        return response.url;
-    }
-
-    // Define the updateCardComponent function to create cards for restaurant data
-  // Function to update the card component with restaurant data
-async function updateCardComponent(restaurants) {
-    const cardContainer = document.getElementById('cardContainer');
-    cardContainer.innerHTML = ''; // Clear previous cards
-    // Iterate over the fetched restaurant data and create card elements
-    for (const restaurant of restaurants) {
-        const card = document.createElement('div');
-        card.classList.add('cardHome');
-        const restaurantName = restaurant.name;
-        const imageUrl = await fetchRandomFoodImage();
-        card.innerHTML = `
-            <img src="${imageUrl}" alt="${restaurantName} Image">
-            <div class="card-content">
-                <h4>${restaurantName}</h4>
-                <p>${restaurant.address}</p>
-                <p class="description">${restaurant.description}</p>
-            </div>
-        `;
-        cardContainer.appendChild(card);
-    }
-}
-
-
+    
+    
     // Function to get the user's current location and fetch nearby restaurants
-    function getUserLocation() {
+    function getUserLocation(keyword) {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
                 const { latitude, longitude } = position.coords;
-                // Call fetchNearbyRestaurants with obtained latitude and longitude
-                fetchNearbyRestaurants(latitude, longitude);
+    
+                fetchNearbyRestaurants(latitude, longitude, keyword, 30, { latitude, longitude });
             }, (error) => {
                 console.error("Error getting user location:", error);
-                // Handle error
+    
             });
         } else {
             console.log("Geolocation is not supported by this browser.");
-            // Handle error
         }
     }
+    
+    
+    window.addEventListener('load', () => getUserLocation(''));
 
-    // Call getUserLocation when the page loads to fetch nearby restaurants
-    window.addEventListener('load', getUserLocation);
+   
 
+    async function updateCardComponent(restaurants) {
+        const cardContainer = document.getElementById('cardContainer');
+        cardContainer.innerHTML = '';
+    
+        // Get user's current location
+        const { coords } = await getCurrentLocation();
+        const { latitude, longitude } = coords;
+    
+        for (const restaurant of restaurants) {
+            const card = document.createElement('div');
+            card.classList.add('cardHome');
+            const restaurantName = restaurant.name;
+            const imageUrl = restaurant.imageUrl;
+            card.innerHTML = `
+                <img src="${imageUrl}" alt="${restaurantName} Image">
+                <div class="card-content">
+                    <h4>${restaurantName}</h4>
+                    <p>${restaurant.address}</p>
+                    <p class="rating">Rating: ${restaurant.rating}</p>
+                    <div class="button-container">
+                    <button class="directions-button" 
+                    data-lat="${restaurant.latitude}" 
+                    data-lng="${restaurant.longitude}">Directions</button>
+                    </div>
+                </div>
+            `;
+            cardContainer.appendChild(card);
+        }
+       
+        addDirectionButtonListeners();
+        
+    }
+
+    const getCurrentLocation = () => {
+        return new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+    };
+
+    const addDirectionButtonListeners = () => {
+        const directionsButtons = document.querySelectorAll('.directions-button');
+        directionsButtons.forEach(button => {
+            button.addEventListener('click', async () => {
+                const lat = parseFloat(button.dataset.lat); // Convert to float
+                const lng = parseFloat(button.dataset.lng); // Convert to float
+                getCurrentLocation()
+                    .then(({ coords }) => {
+                        const userLat = coords.latitude;
+                        const userLng = coords.longitude;
+                        showDirections(userLat, userLng, lat, lng); // Pass lat and lng to showDirections
+                    })
+                    .catch(error => {
+                        console.error('Error getting user location:', error);
+                    });
+            });
+            
+        });
+    };
+
+    const showDirections = (userLat, userLng, lat, lng) => {
+        const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${lat},${lng}&travelmode=driving`;
+        window.open(googleMapsUrl, '_blank');
+    };
+  
+  
+
+
+   
     const foodIconsContainer = document.querySelector('.food-icons-container');
   const navArrows = document.querySelectorAll('.nav-arrow');
 
@@ -274,3 +325,4 @@ async function updateCardComponent(restaurants) {
   
     
 })()
+

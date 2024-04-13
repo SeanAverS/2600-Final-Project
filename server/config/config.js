@@ -8,6 +8,12 @@
     config.MEMBERS = `${__dirname}/../../models/data/members.json`
     config.USERS = `${__dirname}/../../models/data/users.json`
 
+    // MongoDB Info
+    config.SERVER = 'cluster0.aburu72.mongodb.net'
+    config.USERNAME = 'seanasuguitans'
+    config.PASSWORD = 'WyhhWWLJZQc6Qt2'
+    config.DATABASE = 'SavorySpot'
+
     // API key
     config.GOOGLE_PLACES_API_KEY = 'AIzaSyA73mUKFtWkJFVk8UWVAmGnlIbb94fNkZs'
 

@@ -1,79 +1,70 @@
+const { MongoClient } = require('mongodb');
 const config = require(`${__dirname}/../server/config/config`)
 const utils = require(`${__dirname}/../server/utils`)
 const user = require(`${__dirname}/../models/user`)
+const util = require('../models/util.js')
 const express = require("express")
 const bcrypt = require("bcrypt")
 const memberController = express.Router()
 let members = []
 let authenticated = []
+
+const uri = `mongodb+srv://${config.USERNAME}:${config.PASSWORD}@${config.SERVER}/${config.DATABASE}?retryWrites=true&w=majority&appName=Cluster0`;
+console.log("uri:" + uri)
+const client = new MongoClient(uri);
+module.exports = client;
+
+// Route handler for signup
 memberController.post('/signup', async (request, response) => {
-    //let collection = client.db().collection('members')
-    //members = await util.find(collection, {})
-    ///console.log('MongoDB Members', members)
-    console.info(`\t|Inside app.post('/signup')`)
-    const { email, password } = request.body
-    console.log(`\t|Password = ${password}`)
-    let hashed = await bcrypt.hash(password, config.SALT_ROUNDS)
-    console.log(`${password} hash is ${hashed}`)
-    const member = user(email, hashed)
-    if (members.length === 0)
-        members = utils.readJson(config.MEMBERS)
-    //console.log(members)
-    const isMember = members.filter((m) => m.email === email)[0]
-    if (!isMember) {
-        members.push(member)
-        console.info(members)
-        authenticated.push(email)
-        //util.insertOne(collection, members[members.length - 1])
-        utils.saveJson(config.MEMBERS, JSON.stringify(members))
-        response
-            .status(200)
-            .json({
-                success: {
-                    email: email,
-                    message: `${email} was added successfuly to members.`,
-                },
-            })
-    } else {
-        response
-            .status(200)
-            .json({ error: `${email} already exists. Choose a different email` })
+    try {
+        const { email, password } = request.body;
+        const hashedPassword = await bcrypt.hash(password, 10); // Using 10 salt rounds
+
+        // access mongoDb collection
+        const collection = client.db(config.DATABASE).collection('userInfo');
+
+        // check for existing user
+        const existingUser = await collection.findOne({ email });
+        if (existingUser) {
+            return response.status(400).json({ error: `${email} already exists. Choose a different email.` });
+        }
+
+        await collection.insertOne({ email, password: hashedPassword });
+
+        response.status(201).json({ success: `${email} was added successfully to userInfo.` });
+    } catch (error) {
+        console.error('Error during signup:', error);
+        response.status(500).json({ error: 'Signup failed' });
     }
-})
+});
 
 memberController.post('/signin', async (request, response) => {
-    //let collection = client.db().collection('members')
-    //members = await util.find(collection, {})
-    ///console.log('MongoDB Members', members)
-    console.info(`\t|Inside app.post('/signin')`)
-    const { email, password } = request.body
-    if (members.length === 0)
-        members = utils.readJson(config.MEMBERS)
-    console.log(members)
-    const error = {
-        email: email,
-        error: `Email or password is incorrect.`,
-    }
-    const member = members.filter((m) => m.email === email)[0]
+    try {
+        console.log("signing in");
+        const { email, password } = request.body;
 
-    if (!member) {
-        response
-            .status(200)
-            .json(error)
-    } else {
-        const isMatched = await bcrypt.compare(password, member.hashedPassword);
-        if (!isMatched) {
-            response
-                .status(200)
-                .json(error)
-        } else {
-            response
-                .status(200)
-                .json({ success: `${email} logged in successfully!` })
-            authenticated.push(email)
+        const collection = client.db(config.DATABASE).collection('userInfo');
+        const user = await collection.findOne({ email });
+
+        if (!user) {
+            const adminController = require('./AdminController.js');
+            return adminController.authenticateAdmin(req, res, next);
+            // return response.status(400).json({ error: `User not found for email: ${email}` });
         }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+            return response.status(400).json({ error: 'Invalid credentials' });
+        }
+
+        response.status(200).json({ success: `${email} logged in successfully!` });
+    } catch (error) {
+        console.error('Error during signin:', error);
+        response.status(500).json({ error: 'Signin failed' });
     }
-})
+});
+
 memberController.post('/signout', (request, response) => {
     console.log('inside /signout')
     email = request.body.email

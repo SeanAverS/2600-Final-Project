@@ -15,12 +15,7 @@
         console.log(`Connection String<<${uri}`)
 
         const client = new MongoClient(uri)
-        // await client.connect()
-
-        if (await client.connect()) {
-            console.log("cool")
-        }
-
+        await client.connect()
         return new MongoClient(uri);
     }
 
@@ -39,7 +34,6 @@
             .then(res => console.log("Data inserted with ID", res.insertedId))
             .catch(err => {
                 console.log("Could not add data ", err.message);
-                //For now, ingore duplicate entry errors, otherwise re-throw the error for the next catch
                 if (!(err.name === 'BulkWriteError' && err.code === 11000)) throw err;
             })
     }
@@ -52,12 +46,9 @@
         database: connection.DATABASE,
         collections: ['userInfo'],
         getMongoClient: getMongoClient,
-        // logRequest: logRequest,
         find: find,
         insertOne: insertOne,
-        // insertMany: insertMany,
         getMongoClient: getMongoClient,
-        // logRequest: logRequest,
     }
     const moduleExport = util
     if (typeof __dirname != 'undefined')

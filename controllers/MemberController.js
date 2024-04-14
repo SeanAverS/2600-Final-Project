@@ -5,6 +5,7 @@ const user = require(`${__dirname}/../models/user`)
 const util = require('../models/util.js')
 const express = require("express")
 const bcrypt = require("bcrypt")
+const adminController = require('./AdminController.js'); 
 const memberController = express.Router()
 let members = []
 let authenticated = []
@@ -47,9 +48,9 @@ memberController.post('/signin', async (request, response) => {
         const user = await collection.findOne({ email });
 
         if (!user) {
-            const adminController = require('./AdminController.js');
-            return adminController.authenticateAdmin(req, res, next);
             // return response.status(400).json({ error: `User not found for email: ${email}` });
+            // reroute to admin controller 
+            return adminController.handleAdminSignin(request, response);
         }
 
         const isMatch = await bcrypt.compare(password, user.password);

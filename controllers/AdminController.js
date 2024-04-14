@@ -9,36 +9,6 @@ const uri = `mongodb+srv://${config.USERNAME}:${config.PASSWORD}@${config.SERVER
 const client = new MongoClient(uri);
 module.exports = client;
 
-// Middleware to authenticate admin
-async function authenticateAdmin(req, res, next) {
-    console.log("inside admin authenticate")
-    try {
-        const { email, password } = req.body;
-
-        const collection = client.db(config.DATABASE).collection('adminInfo');
-        const admin = await collection.findOne({ email });
-
-
-        if (!admin) {
-            return res.status(400).json({ error: `Admin not found for email: ${email}` });
-        }
-
-        const isMatch = await bcrypt.compare(password, admin.password);
-
-        if (!isMatch) {
-            return res.status(400).json({ error: 'Invalid credentials' });
-        }
-
-        // Store admin information in the session for future requests
-        req.session.admin = admin;
-
-        next();
-    } catch (error) {
-        console.error('Error during admin authentication:', error);
-        res.status(500).json({ error: 'Admin authentication failed' });
-    }
-}
-
 // rerouted signin for admin
 async function handleAdminSignin(req, res) {
     try {
@@ -63,7 +33,7 @@ module.exports = {
 };
 
 
-// Routes for admin
+// rerouted signin for admin
 adminController.post('/signin', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -80,15 +50,5 @@ adminController.post('/signin', async (req, res) => {
         res.status(500).json({ error: 'Admin signin failed' });
     }
 });
-
-
-// adminController.post('/createUser', authenticateAdmin, async (req, res) => {
-//     try {
-//         // Your logic to create a new user (e.g., add to MongoDB)
-//     } catch (error) {
-//         console.error('Error creating user:', error);
-//         res.status(500).json({ error: 'Failed to create user' });
-//     }
-// });
 
 module.exports = adminController;

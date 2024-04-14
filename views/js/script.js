@@ -195,29 +195,45 @@
     getUserLocation();
 })
 //----------------------------------------------------
-const searchInput = document.getElementById('searchInput');
-    searchInput.addEventListener('input', (event) => {
-        const keyword = event.target.value.trim();
-        // Get user's current location and pass it to fetchNearbyRestaurants
-        getUserLocation(keyword);
-    });
 
-    async function fetchNearbyRestaurants(latitude, longitude, keyword = '', limit = 30, userLocation) {
-        try {
-            const params = new URLSearchParams({
-                latitude: latitude,
-                longitude: longitude,
-                limit: limit,
-                keyword: keyword
-            });
-            const url = `/restaurants?${params.toString()}`;
-            const response = await fetch(url);
-            const data = await response.json();
-            updateCardComponent(data, userLocation);
-        } catch (error) {
-            console.error("Error fetching nearby restaurants:", error);
-        }
+const searchInput = document.getElementById('searchInput');
+const searchButton = document.querySelector('.search-button');
+const background = document.querySelector('.background');
+
+// Functionality for hitting the enter key in the search input
+searchInput.addEventListener('keypress', async (event) => {
+    if (event.key === 'Enter') {
+        background.style.display = 'none';
+        const keyword = searchInput.value.trim();
+        await getUserLocation(keyword);
+        await fetchNearbyRestaurants(latitude, longitude, keyword, 30, { latitude, longitude });
     }
+});
+
+// Functionality for search button
+searchButton.addEventListener('click', async () => {
+    background.style.display = 'none';
+    const keyword = searchInput.value.trim();
+    await getUserLocation(keyword);
+    await fetchNearbyRestaurants(latitude, longitude, keyword, 30, { latitude, longitude });
+});
+// function for fetching data
+async function fetchNearbyRestaurants(latitude, longitude, keyword = '', limit = 30, userLocation) {
+    try {
+        const params = new URLSearchParams({
+            latitude: latitude,
+            longitude: longitude,
+            limit: limit,
+            keyword: keyword
+        });
+        const url = `/restaurants?${params.toString()}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        updateCardComponent(data, userLocation);
+    } catch (error) {
+        console.error("Error fetching nearby restaurants:", error);
+    }
+}
     
     
     // Function to get the user's current location and fetch nearby restaurants
@@ -245,7 +261,7 @@ const searchInput = document.getElementById('searchInput');
         const cardContainer = document.getElementById('cardContainer');
         cardContainer.innerHTML = '';
     
-        // Get user's current location
+    
         const { coords } = await getCurrentLocation();
         const { latitude, longitude } = coords;
     
@@ -284,13 +300,13 @@ const searchInput = document.getElementById('searchInput');
         const directionsButtons = document.querySelectorAll('.directions-button');
         directionsButtons.forEach(button => {
             button.addEventListener('click', async () => {
-                const lat = parseFloat(button.dataset.lat); // Convert to float
-                const lng = parseFloat(button.dataset.lng); // Convert to float
+                const lat = parseFloat(button.dataset.lat); 
+                const lng = parseFloat(button.dataset.lng); 
                 getCurrentLocation()
                     .then(({ coords }) => {
                         const userLat = coords.latitude;
                         const userLng = coords.longitude;
-                        showDirections(userLat, userLng, lat, lng); // Pass lat and lng to showDirections
+                        showDirections(userLat, userLng, lat, lng);
                     })
                     .catch(error => {
                         console.error('Error getting user location:', error);
@@ -321,6 +337,14 @@ const searchInput = document.getElementById('searchInput');
         behavior: 'smooth'
       });
     });
+  });
+  const foodIcons = document.querySelectorAll('.food-icon');
+  foodIcons.forEach(icon => {
+      icon.addEventListener('click', () => {
+          const keyword = icon.dataset.keyword;
+          getUserLocation(keyword);
+          location.reload();
+      });
   });
   
     

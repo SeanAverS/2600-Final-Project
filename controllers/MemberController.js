@@ -48,7 +48,6 @@ memberController.post('/signin', async (request, response) => {
         const user = await collection.findOne({ email });
 
         if (!user) {
-            // return response.status(400).json({ error: `User not found for email: ${email}` });
             // reroute to admin controller 
             return adminController.handleAdminSignin(request, response);
         }

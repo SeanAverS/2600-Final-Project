@@ -2,15 +2,12 @@
 (() => {
     //----------------------------------------------------
     const navigation = {
-        home: { title: "Home Page", url: "Home", section: "Home" },
-        about: { title: "About Page", url: "About", section: "About" },
-        posts: { title: "Member Page", url: "Member/Posts", section: "Posts" },
-        search: { title: "Member Page", url: "Member/Search", section: "Search Posts" },
-        orders: { title: "Orders", url: "Orders", section: "Orders" },
+        home: { title: "SavorySpot", url: "Home", section: "Home" },
+        about: { title: "About | SavorySpot", url: "About", section: "About" },
         users: { title: "Admin Page", url: "Admin/Users", section: "Manage Users" },
         content: { title: "Admin Page", url: "Admin/Content", section: "Manage Content" },
-        register: { title: "Register Page", url: "Account/Register", section: "Register" },
-        login: { title: "Login Page", url: "Account/Login", section: "Login" }
+        register: { title: "Register | SavorySpot", url: "Account/Register", section: "Register" },
+        login: { title: "Login | SavorySpot", url: "Account/Login", section: "Login" }
     }
     const registerWarning = document.querySelector('#Register div[name="error"]')
     const loginWarning = document.querySelector('#Login div[name="error"]')

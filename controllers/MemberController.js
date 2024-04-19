@@ -27,7 +27,7 @@ memberController.post('/signup', async (request, response) => {
         // check for existing user
         const existingUser = await collection.findOne({ email });
         if (existingUser) {
-            return response.status(400).json({ error: `<span class="text-danger">${email} already exists. Please choose a different email.</span>` });
+            return response.status(400).json({ error: `<span class="text-secondary" style="font-size:16px">${email} already exists. Please choose a different email.</span>` });
         }
 
         await collection.insertOne({ email, password: hashedPassword });
@@ -55,7 +55,7 @@ memberController.post('/signin', async (request, response) => {
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
-            return response.status(400).json({ error: `<span class="text-danger">Please re-enter your email or password.</span>` });
+            return response.status(400).json({ error: `<span class="text-secondary" style="font-size:16px">Please re-enter your email or password.</span>` });
         }
 
         response.status(200).json({ success: `${email} logged in successfully!` });

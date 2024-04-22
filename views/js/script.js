@@ -302,9 +302,17 @@ async function fetchNearbyRestaurants(latitude, longitude, keyword = '', limit =
                     .then(({ coords }) => {
                         const userLat = coords.latitude;
                         const userLng = coords.longitude;
+                        
                         // display map when user clicks directions
                         document.getElementById('map-container').style.display = 'block';
-                        showDirections(userLat, userLng, lat, lng); // in new window 
+                        
+                        // go to map position
+                        window.scrollTo({
+                            top: 750,
+                            behavior: 'instant'
+                        });
+
+                        // showDirections(userLat, userLng, lat, lng); // in new window 
                         displayDirections(userLat, userLng, lat, lng) // on page
                     })
                     .catch(error => {
@@ -315,10 +323,10 @@ async function fetchNearbyRestaurants(latitude, longitude, keyword = '', limit =
         });
     };
 
-    const showDirections = (userLat, userLng, lat, lng) => {
-        googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${lat},${lng}&travelmode=driving`;
-        window.open(googleMapsUrl, '_blank');
-    }; 
+    // const showDirections = (userLat, userLng, lat, lng) => {
+    //     googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${lat},${lng}&travelmode=driving`;
+    //     window.open(googleMapsUrl, '_blank');
+    // }; 
 
     async function displayDirections(userLat, userLng, lat, lng) {
         await google.maps.importLibrary("maps");

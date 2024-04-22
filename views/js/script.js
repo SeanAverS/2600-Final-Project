@@ -118,7 +118,6 @@
     }
 
     const setActivePage = (section) => {
-        console.log(section)
         let menuItems = document.querySelectorAll('a[data-page]')
         menuItems.forEach(menuItem => {
             if (section === menuItem.textContent)
@@ -296,14 +295,17 @@ async function fetchNearbyRestaurants(latitude, longitude, keyword = '', limit =
     const addDirectionButtonListeners = () => {
         const directionsButtons = document.querySelectorAll('.directions-button');
         directionsButtons.forEach(button => {
-            button.addEventListener('click', async () => {
+            button.addEventListener('click', async () => { 
                 const lat = parseFloat(button.dataset.lat); 
                 const lng = parseFloat(button.dataset.lng); 
                 getCurrentLocation()
                     .then(({ coords }) => {
                         const userLat = coords.latitude;
                         const userLng = coords.longitude;
-                        showDirections(userLat, userLng, lat, lng);
+                        // display map when user clicks directions
+                        document.getElementById('map-container').style.display = 'block';
+                        showDirections(userLat, userLng, lat, lng); // in new window 
+                        displayDirections(userLat, userLng, lat, lng) // on page
                     })
                     .catch(error => {
                         console.error('Error getting user location:', error);
@@ -314,11 +316,37 @@ async function fetchNearbyRestaurants(latitude, longitude, keyword = '', limit =
     };
 
     const showDirections = (userLat, userLng, lat, lng) => {
-        const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${lat},${lng}&travelmode=driving`;
+        googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${lat},${lng}&travelmode=driving`;
         window.open(googleMapsUrl, '_blank');
-    };
-  
-  
+    }; 
+
+    async function displayDirections(userLat, userLng, lat, lng) {
+        await google.maps.importLibrary("maps");
+    
+        // user location on map
+        const map = new google.maps.Map(document.getElementById("map-container"), {
+            center: { lat: userLat, lng: userLng },
+            zoom: 8,
+        });
+    
+        const directionsService = new google.maps.DirectionsService();
+        const directionsRenderer = new google.maps.DirectionsRenderer({ map });
+    
+        const request = {
+            origin: { lat: userLat, lng: userLng },
+            destination: { lat, lng },
+            travelMode: 'DRIVING',
+        };
+    
+        directionsService.route(request, (result, status) => {
+            if (status === 'OK') {
+                // display directions on map
+                directionsRenderer.setDirections(result);
+            } else {
+                console.error('Directions request failed due to ' + status);
+            }
+        });
+    }
 
 
    

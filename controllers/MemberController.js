@@ -11,7 +11,6 @@ let members = []
 let authenticated = []
 
 const uri = `mongodb+srv://${config.USERNAME}:${config.PASSWORD}@${config.SERVER}/${config.DATABASE}?retryWrites=true&w=majority&appName=Cluster0`;
-console.log("uri:" + uri)
 const client = new MongoClient(uri);
 module.exports = client;
 
@@ -47,28 +46,35 @@ memberController.post('/signin', async (request, response) => {
         const collection = client.db(config.DATABASE).collection('userInfo');
         const user = await collection.findOne({ email });
 
-        if (!user) {
-            // reroute to admin controller 
-            return adminController.handleAdminSignin(request, response);
-        }
+        let passwordMatch = "";
 
-        const isMatch = await bcrypt.compare(password, user.password);
+        if (!user) { 
+            // compare input with admin credentials 
+            const adminDB = client.db(config.DATABASE).collection('adminInfo');
+            const admin = await adminDB.findOne({ email });
 
-        if (!isMatch) {
+            passwordMatch = await bcrypt.compare(password, admin.password);
+            console.log("admin signed in");
+        } else {
+            passwordMatch = await bcrypt.compare(password, user.password);
+            console.log("member signed in");
+        } // wrong email || password goes to 500 error
+         
+
+        if (!passwordMatch) {
             return response.status(400).json({ error: `<span class="text-secondary" style="font-size:16px">Please re-enter your email or password.</span>` });
         }
-
         response.status(200).json({ success: `${email} logged in successfully!` });
+
     } catch (error) {
         console.error('Error during signin:', error);
-        response.status(500).json({ error: 'Signin failed' });
+        response.status(500).json({ error: `<span class="text-secondary" style="font-size:16px">Please re-enter your email or password.</span>` });
     }
 });
 
 memberController.post('/signout', (request, response) => {
-    console.log('inside /signout')
+    console.log('signing out')
     email = request.body.email
-    console.log("authenticated", authenticated)
     authenticated.splice(authenticated.indexOf(email), 1)
     console.log("authenticated", authenticated)
     response

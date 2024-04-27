@@ -5,7 +5,6 @@ const user = require(`${__dirname}/../models/user`)
 const util = require('../models/util.js')
 const express = require("express")
 const bcrypt = require("bcrypt")
-const adminController = require('./AdminController.js');
 const memberController = express.Router()
 let members = []
 let authenticated = []

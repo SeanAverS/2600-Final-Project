@@ -13,10 +13,8 @@ app.use(express.urlencoded({ extended: false }));
 // Import homeController and memberController
 const homeController = require(`${__dirname}/../controllers/homeController`);
 const memberController = require(`${__dirname}/../controllers/memberController`);
-const adminController = require(`${__dirname}/../controllers/AdminController`);
 app.use(homeController);
 app.use(memberController);
-app.use(adminController);
 
 
 // Endpoint to fetch nearby restaurants

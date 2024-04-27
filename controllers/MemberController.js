@@ -5,7 +5,7 @@ const user = require(`${__dirname}/../models/user`)
 const util = require('../models/util.js')
 const express = require("express")
 const bcrypt = require("bcrypt")
-const adminController = require('./AdminController.js'); 
+const adminController = require('./AdminController.js');
 const memberController = express.Router()
 let members = []
 let authenticated = []
@@ -47,25 +47,30 @@ memberController.post('/signin', async (request, response) => {
         const user = await collection.findOne({ email });
 
         let passwordMatch = "";
+        let isAdmin = false;
 
-        if (!user) { 
-            // compare input with admin credentials 
+        if (!user) {
+            // verify admin email
             const adminDB = client.db(config.DATABASE).collection('adminInfo');
-            const admin = await adminDB.findOne({ email });
+            const adminEmail = await adminDB.findOne({ email });
 
-            passwordMatch = await bcrypt.compare(password, admin.password);
-            console.log("admin signed in");
-        } else {
+            // verify admin password
+            if (adminEmail) {
+                passwordMatch = await bcrypt.compare(password, adminEmail.password);
+
+                console.log(passwordMatch ? "admin signed in" : "wrong admin password");
+                isAdmin = passwordMatch ? true : false;
+            }
+        } else { // verify member password
             passwordMatch = await bcrypt.compare(password, user.password);
             console.log("member signed in");
         } // wrong email || password goes to 500 error
-         
+
 
         if (!passwordMatch) {
             return response.status(400).json({ error: `<span class="text-secondary" style="font-size:16px">Please re-enter your email or password.</span>` });
         }
         response.status(200).json({ success: `${email} logged in successfully!` });
-
     } catch (error) {
         console.error('Error during signin:', error);
         response.status(500).json({ error: `<span class="text-secondary" style="font-size:16px">Please re-enter your email or password.</span>` });

@@ -31,6 +31,9 @@
                         <li class="nav-item ml-4">
                             <a class="nav-link btn btn-secondary" data-page="about">About</a>
                         </li>
+                        <li admin-authenticated class="nav-item ml-4">
+                            <a class="nav-link btn btn-secondary" data-page="users">Manage Users</a>
+                        </li>
                     </ul>
                     <form class="d-flex text-end h3 text-white">
                         <div data-nonAuthenticated>
@@ -107,6 +110,34 @@
 
                     </p>
                 </div>
+            </div>
+        </div>
+    </section>
+    <!-- Admin delete page -->
+    <section id="Manage Users">
+        <div class="card">
+            <div class="card-header bg-danger text-white text-center h2" role="heading">
+                Delete User
+            </div>
+            <div class="card-body text-white h5">
+                <form id="deleteUserForm" class="row g-3 mt-3">
+                    <div class="mb-3 row">
+                        <label for="deleteEmail" class="col-form-label-sm text-secondary">Enter Email Address to
+                            Delete</label>
+                        <div class="col-sm-12">
+                            <input type="email" class="form-control" id="deleteEmail" name="email"
+                                placeholder="Enter email" required>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="alert alert-warning text-center h3" id="deleteError"></div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="btn-group btn-lg text-white h4 text-end" role="group" aria-label="deleteUser">
+                            <button type="submit" id="deleteUserBtn" class="btn btn-danger text-end">Delete</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </section>

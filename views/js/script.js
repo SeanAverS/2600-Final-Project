@@ -137,13 +137,18 @@
     const authorize = (isAuthenticated) => {
         const authenticated = document.querySelectorAll('[data-authenticated]')
         const nonAuthenticated = document.querySelector('[data-nonAuthenticated]')
+        const adminAuthenticated = document.querySelector('[admin-authenticated]')
+
         if(isAuthenticated) {
+            if(email == "seanAS@yahoo.com") {show(adminAuthenticated)}
+
             authenticated.forEach(element => show(element))
             hide(nonAuthenticated)
         }
         else {
             authenticated.forEach(element => hide(element))
             show(nonAuthenticated)
+            hide(adminAuthenticated)
         }
     }
 
@@ -198,6 +203,7 @@ const deleteUser = async(event) => {
         document.querySelector("#signup").onclick = signup
         document.querySelector("#signout").onclick = signout
         document.querySelector("#signin").onclick = signin
+        document.querySelector("#deleteUserBtn").onclick = deleteUser
 
     getUserLocation();
 })

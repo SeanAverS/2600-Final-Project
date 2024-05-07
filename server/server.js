@@ -16,6 +16,12 @@ const memberController = require(`${__dirname}/../controllers/memberController`)
 app.use(homeController);
 app.use(memberController);
 
+// delete user endpoint
+app.post('/deleteUser', (req, res) => {
+    const deleteEmail = req.body.deleteEmail;
+    res.json({ message: `User with email ${deleteEmail} deleted successfully.` });
+});
+
 
 // Endpoint to fetch nearby restaurants
 app.get("/restaurants", async (req, res) => {

@@ -23,7 +23,6 @@
         return data
     }
     const postData = async (url = '', data = {}) => {
-        console.log("url", url)
         // Default options are marked with *
         const response = await fetch(url, {
             method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -60,7 +59,6 @@
         email = document.querySelector('#Register input[name="email"]').value
         let password = document.querySelector('#Register input[name="password"]').value
         let confirm = document.querySelector('#confirm').value
-        console.log(email, password, confirm)
 
         if (password == confirm) {
             const reply = await postData('/signup', { email, password })
@@ -69,7 +67,7 @@
                 show(registerWarning)
             }
             else if (reply.success) {
-                console.log(reply, reply)
+                console.log(reply)
                 window.history.pushState(navigation.home, "", `/${navigation.home.url}`)
                 displaySection(navigation.home)
                 authorize(true)
@@ -77,7 +75,7 @@
             }
         }
         else {
-            registerWarning.innerHTML = 'Passwords do not match. Re-enter your password'
+            registerWarning.innerHTML = '<span class="text-danger" style="font-size: 16px;">Passwords do not match. Please re-enter your password</span>'
             show(registerWarning)
         }
     }
@@ -85,12 +83,9 @@
     document.querySelector("#signup").onclick = signup;
     const signout = async (event) => {
         event.preventDefault()
-        console.log(email)
         const reply = await postData('/signout', { email })
         if (reply.success) {
-            console.log('inside signout')
             console.log(reply.success)
-            console.log(reply, reply)
             window.history.pushState(navigation.home, "", `/${navigation.home.url}`)
             displaySection(navigation.home)
             authorize(false)
@@ -101,7 +96,6 @@
     const signin = async (event) => {
         event.preventDefault()
         email = document.querySelector('#Login input[name="email"]').value
-        console.log(email)
         let password = document.querySelector('#Login input[name="password"]').value
         const reply = await postData('/signin', { email, password })
         if (reply.error) {
@@ -109,7 +103,7 @@
             show(loginWarning)
         }
         else if (reply.success) {
-            console.log(reply, reply)
+            console.log(reply)
             window.history.pushState(navigation.home, "", `/${navigation.home.url}`)
                 displaySection(navigation.home)
             authorize(true)
@@ -143,7 +137,7 @@
     const authorize = (isAuthenticated) => {
         const authenticated = document.querySelectorAll('[data-authenticated]')
         const nonAuthenticated = document.querySelector('[data-nonAuthenticated]')
-        if(isAuthenticated) { 
+        if(isAuthenticated) {
             authenticated.forEach(element => show(element))
             hide(nonAuthenticated)
         }
@@ -152,6 +146,23 @@
             show(nonAuthenticated)
         }
     }
+
+const deleteUser = async(event) => {
+    event.preventDefault()
+    email = document.querySelector('#deleteEmail').value
+
+    try {
+        const reply = await postData('/deleteUser', { email });
+        if (reply.success) {
+            console.log(reply.success);
+        } else {
+            console.error(reply.error);
+        }
+    } catch (error) {
+        console.error('Error deleting user:', error);
+    }
+}    
+
     // Handle forward/back buttons
     window.onpopstate = (event) => {
         // If a state has been provided, we have a "simulated" page

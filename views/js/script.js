@@ -205,7 +205,7 @@ const deleteUser = async(event) => {
         document.querySelector("#signin").onclick = signin
         document.querySelector("#deleteUserBtn").onclick = deleteUser
 
-    getUserLocation();
+    // getUserLocation();
 })
 //----------------------------------------------------
 
@@ -250,23 +250,23 @@ async function fetchNearbyRestaurants(latitude, longitude, keyword = '', limit =
     
     
     // Function to get the user's current location and fetch nearby restaurants
-    function getUserLocation(keyword) {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                const { latitude, longitude } = position.coords;
+    // function getUserLocation(keyword) {
+    //     if (navigator.geolocation) {
+    //         navigator.geolocation.getCurrentPosition((position) => {
+    //             const { latitude, longitude } = position.coords;
     
-                fetchNearbyRestaurants(latitude, longitude, keyword, 30, { latitude, longitude });
-            }, (error) => {
-                console.error("Error getting user location:", error);
+    //             fetchNearbyRestaurants(latitude, longitude, keyword, 30, { latitude, longitude });
+    //         }, (error) => {
+    //             console.error("Error getting user location:", error);
     
-            });
-        } else {
-            console.log("Geolocation is not supported by this browser.");
-        }
-    }
+    //         });
+    //     } else {
+    //         console.log("Geolocation is not supported by this browser.");
+    //     }
+    // }
     
     
-    window.addEventListener('load', () => getUserLocation(''));
+    // window.addEventListener('load', () => getUserLocation(''));
 
    
 

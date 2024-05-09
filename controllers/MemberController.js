@@ -1,13 +1,8 @@
 const { MongoClient } = require('mongodb');
 const config = require(`${__dirname}/../server/config/config`)
-const utils = require(`${__dirname}/../server/utils`)
-const user = require(`${__dirname}/../models/user`)
-const util = require('../models/util.js')
 const express = require("express")
 const bcrypt = require("bcrypt")
 const memberController = express.Router()
-let members = []
-let authenticated = []
 
 const uri = `mongodb+srv://${config.USERNAME}:${config.PASSWORD}@${config.SERVER}/${config.DATABASE}?retryWrites=true&w=majority&appName=Cluster0`;
 const client = new MongoClient(uri);

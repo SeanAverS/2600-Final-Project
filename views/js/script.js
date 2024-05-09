@@ -54,8 +54,8 @@
         // prevent refreshing the page
         event.preventDefault()
         window.history.pushState(navigation.register, "", `/${navigation.register.url}`);
-    displaySection(navigation.register);
-        
+        displaySection(navigation.register);
+
         email = document.querySelector('#Register input[name="email"]').value
         let password = document.querySelector('#Register input[name="password"]').value
         let confirm = document.querySelector('#confirm').value
@@ -105,7 +105,7 @@
         else if (reply.success) {
             console.log(reply)
             window.history.pushState(navigation.home, "", `/${navigation.home.url}`)
-                displaySection(navigation.home)
+            displaySection(navigation.home)
             authorize(true)
             document.querySelector('[data-authenticated] > span').innerHTML = `Welcome ${email}!`
         }
@@ -139,8 +139,8 @@
         const nonAuthenticated = document.querySelector('[data-nonAuthenticated]')
         const adminAuthenticated = document.querySelector('[admin-authenticated]')
 
-        if(isAuthenticated) {
-            if(email == "seanAS@yahoo.com") {show(adminAuthenticated)}
+        if (isAuthenticated) {
+            if (email == "seanAS@yahoo.com") { show(adminAuthenticated) }
 
             authenticated.forEach(element => show(element))
             hide(nonAuthenticated)
@@ -152,21 +152,21 @@
         }
     }
 
-const deleteUser = async(event) => {
-    event.preventDefault()
-    email = document.querySelector('#deleteEmail').value
+    const deleteUser = async (event) => {
+        event.preventDefault()
+        email = document.querySelector('#deleteEmail').value
 
-    try {
-        const reply = await postData('/deleteUser', { email });
-        if (reply.success) {
-            console.log(reply.success);
-        } else {
-            console.error(reply.error);
+        try {
+            const reply = await postData('/deleteUser', { email });
+            if (reply.success) {
+                console.log(reply.success);
+            } else {
+                console.error(reply.error);
+            }
+        } catch (error) {
+            console.error('Error deleting user:', error);
         }
-    } catch (error) {
-        console.error('Error deleting user:', error);
     }
-}    
 
     // Handle forward/back buttons
     window.onpopstate = (event) => {
@@ -190,94 +190,84 @@ const deleteUser = async(event) => {
             }
         }
         authorize(false)
-        // const noticeDialog = document.querySelector("#noticeDialog")
-        // const errors = document.querySelectorAll('section div[name="error"]')
-        // errors.forEach(error => hide(error))
-        
-        // noticeDialog.showModal()
-        // document.querySelector("#noticeButton").onclick = (event) => {
-        //     event.preventDefault()
-        //     if (document.querySelector("#agree").checked)
-        //         noticeDialog.close()
-        // }
+
         document.querySelector("#signup").onclick = signup
         document.querySelector("#signout").onclick = signout
         document.querySelector("#signin").onclick = signin
         document.querySelector("#deleteUserBtn").onclick = deleteUser
 
-    // getUserLocation();
-})
-//----------------------------------------------------
+        // getUserLocation();
+    })
+    //----------------------------------------------------
 
-const searchInput = document.getElementById('searchInput');
-const searchButton = document.querySelector('.search-button');
-const background = document.querySelector('.background');
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.querySelector('.search-button');
+    const background = document.querySelector('.background');
 
-// Functionality for hitting the enter key in the search input
-searchInput.addEventListener('keypress', async (event) => {
-    if (event.key === 'Enter') {
+    // Functionality for hitting the enter key in the search input
+    searchInput.addEventListener('keypress', async (event) => {
+        if (event.key === 'Enter') {
+            background.style.display = 'none';
+            const keyword = searchInput.value.trim();
+            await getUserLocation(keyword);
+            await fetchNearbyRestaurants(latitude, longitude, keyword, 30, { latitude, longitude });
+        }
+    });
+
+    // Functionality for search button
+    searchButton.addEventListener('click', async () => {
         background.style.display = 'none';
         const keyword = searchInput.value.trim();
         await getUserLocation(keyword);
         await fetchNearbyRestaurants(latitude, longitude, keyword, 30, { latitude, longitude });
+    });
+    // function for fetching data
+    async function fetchNearbyRestaurants(latitude, longitude, keyword = '', limit = 30, userLocation) {
+        try {
+            const params = new URLSearchParams({
+                latitude: latitude,
+                longitude: longitude,
+                limit: limit,
+                keyword: keyword
+            });
+            const url = `/restaurants?${params.toString()}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            updateCardComponent(data, userLocation);
+        } catch (error) {
+            console.error("Error fetching nearby restaurants:", error);
+        }
     }
-});
 
-// Functionality for search button
-searchButton.addEventListener('click', async () => {
-    background.style.display = 'none';
-    const keyword = searchInput.value.trim();
-    await getUserLocation(keyword);
-    await fetchNearbyRestaurants(latitude, longitude, keyword, 30, { latitude, longitude });
-});
-// function for fetching data
-async function fetchNearbyRestaurants(latitude, longitude, keyword = '', limit = 30, userLocation) {
-    try {
-        const params = new URLSearchParams({
-            latitude: latitude,
-            longitude: longitude,
-            limit: limit,
-            keyword: keyword
-        });
-        const url = `/restaurants?${params.toString()}`;
-        const response = await fetch(url);
-        const data = await response.json();
-        updateCardComponent(data, userLocation);
-    } catch (error) {
-        console.error("Error fetching nearby restaurants:", error);
-    }
-}
-    
-    
     // Function to get the user's current location and fetch nearby restaurants
     // function getUserLocation(keyword) {
     //     if (navigator.geolocation) {
     //         navigator.geolocation.getCurrentPosition((position) => {
     //             const { latitude, longitude } = position.coords;
-    
+
     //             fetchNearbyRestaurants(latitude, longitude, keyword, 30, { latitude, longitude });
     //         }, (error) => {
     //             console.error("Error getting user location:", error);
-    
+
     //         });
     //     } else {
     //         console.log("Geolocation is not supported by this browser.");
     //     }
     // }
-    
-    
+
+
     // window.addEventListener('load', () => getUserLocation(''));
 
-   
+
 
     async function updateCardComponent(restaurants) {
         const cardContainer = document.getElementById('cardContainer');
         cardContainer.innerHTML = '';
-    
-    
+
+
         const { coords } = await getCurrentLocation();
         const { latitude, longitude } = coords;
-    
+
         for (const restaurant of restaurants) {
             const card = document.createElement('div');
             card.classList.add('cardHome');
@@ -298,9 +288,9 @@ async function fetchNearbyRestaurants(latitude, longitude, keyword = '', limit =
             `;
             cardContainer.appendChild(card);
         }
-       
+
         addDirectionButtonListeners();
-        
+
     }
 
     const getCurrentLocation = () => {
@@ -312,17 +302,17 @@ async function fetchNearbyRestaurants(latitude, longitude, keyword = '', limit =
     const addDirectionButtonListeners = () => {
         const directionsButtons = document.querySelectorAll('.directions-button');
         directionsButtons.forEach(button => {
-            button.addEventListener('click', async () => { 
-                const lat = parseFloat(button.dataset.lat); 
-                const lng = parseFloat(button.dataset.lng); 
+            button.addEventListener('click', async () => {
+                const lat = parseFloat(button.dataset.lat);
+                const lng = parseFloat(button.dataset.lng);
                 getCurrentLocation()
                     .then(({ coords }) => {
                         const userLat = coords.latitude;
                         const userLng = coords.longitude;
-                        
+
                         // display map when user clicks directions
                         document.getElementById('map-container').style.display = 'block';
-                        
+
                         // go to map position
                         window.scrollTo({
                             top: 750,
@@ -336,7 +326,7 @@ async function fetchNearbyRestaurants(latitude, longitude, keyword = '', limit =
                         console.error('Error getting user location:', error);
                     });
             });
-            
+
         });
     };
 
@@ -347,22 +337,22 @@ async function fetchNearbyRestaurants(latitude, longitude, keyword = '', limit =
 
     async function displayDirections(userLat, userLng, lat, lng) {
         await google.maps.importLibrary("maps");
-    
+
         // user location on map
         const map = new google.maps.Map(document.getElementById("map-container"), {
             center: { lat: userLat, lng: userLng },
             zoom: 8,
         });
-    
+
         const directionsService = new google.maps.DirectionsService();
         const directionsRenderer = new google.maps.DirectionsRenderer({ map });
-    
+
         const request = {
             origin: { lat: userLat, lng: userLng },
             destination: { lat, lng },
             travelMode: 'DRIVING',
         };
-    
+
         directionsService.route(request, (result, status) => {
             if (status === 'OK') {
                 // display directions on map
@@ -374,29 +364,29 @@ async function fetchNearbyRestaurants(latitude, longitude, keyword = '', limit =
     }
 
 
-   
-    const foodIconsContainer = document.querySelector('.food-icons-container');
-  const navArrows = document.querySelectorAll('.nav-arrow');
 
-  // Add event listeners to navigation arrows
-  navArrows.forEach(arrow => {
-    arrow.addEventListener('click', () => {
-      const direction = arrow.classList.contains('left') ? -1 : 1;
-      foodIconsContainer.scrollBy({
-        left: direction * (foodIconsContainer.offsetWidth / 2),
-        behavior: 'smooth'
-      });
+    const foodIconsContainer = document.querySelector('.food-icons-container');
+    const navArrows = document.querySelectorAll('.nav-arrow');
+
+    // Add event listeners to navigation arrows
+    navArrows.forEach(arrow => {
+        arrow.addEventListener('click', () => {
+            const direction = arrow.classList.contains('left') ? -1 : 1;
+            foodIconsContainer.scrollBy({
+                left: direction * (foodIconsContainer.offsetWidth / 2),
+                behavior: 'smooth'
+            });
+        });
     });
-  });
-  const foodIcons = document.querySelectorAll('.food-icon');
-  foodIcons.forEach(icon => {
-      icon.addEventListener('click', () => {
-          const keyword = icon.dataset.keyword;
-          getUserLocation(keyword);
-          location.reload();
-      });
-  });
-  
-    
+    const foodIcons = document.querySelectorAll('.food-icon');
+    foodIcons.forEach(icon => {
+        icon.addEventListener('click', () => {
+            const keyword = icon.dataset.keyword;
+            getUserLocation(keyword);
+            location.reload();
+        });
+    });
+
+
 })()
 

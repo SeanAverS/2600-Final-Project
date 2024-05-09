@@ -82,4 +82,26 @@ memberController.post('/signout', (request, response) => {
         })
     console.log("signed out");
 })
+
+// delete a user
+memberController.post('/deleteUser', async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        const collection = client.db(config.DATABASE).collection('userInfo');
+
+        const result = await collection.deleteOne({ email });
+
+        // check if user was deleted
+        if (result.deletedCount === 1) {
+            res.status(200).json({ success: { success: `${email} deleted successfully.`} })
+        } else {
+            res.status(404).json({ error: 'User not found.' });
+        }
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).json({ error: 'An error occurred while deleting the user.' });
+    }
+});
+
 module.exports = memberController

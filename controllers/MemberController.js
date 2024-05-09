@@ -19,7 +19,6 @@ memberController.post('/signup', async (request, response) => {
         const { email, password } = request.body;
         const hashedPassword = await bcrypt.hash(password, 10); // Using 10 salt rounds
 
-        // access mongoDb collection
         const collection = client.db(config.DATABASE).collection('userInfo');
 
         // check for existing user
@@ -37,39 +36,35 @@ memberController.post('/signup', async (request, response) => {
     }
 });
 
+let isAdmin = false;
 memberController.post('/signin', async (request, response) => {
     try {
-        console.log("signing in");
         const { email, password } = request.body;
 
         const collection = client.db(config.DATABASE).collection('userInfo');
         const user = await collection.findOne({ email });
 
         let passwordMatch = "";
-        let isAdmin = false;
 
-        if (!user) {
-            // verify admin email
+        if (!user) { // verify admin email
             const adminDB = client.db(config.DATABASE).collection('adminInfo');
             const adminEmail = await adminDB.findOne({ email });
 
-            // verify admin password
             if (adminEmail) {
                 passwordMatch = await bcrypt.compare(password, adminEmail.password);
 
-                console.log(passwordMatch ? "admin signed in" : "wrong admin password");
                 isAdmin = passwordMatch ? true : false;
+                console.log(isAdmin ? "admin signed in" : "wrong admin password");
             }
         } else { // verify member password
             passwordMatch = await bcrypt.compare(password, user.password);
             console.log("member signed in");
-        } // wrong email || password goes to 500 error
-
+        } 
 
         if (!passwordMatch) {
             return response.status(400).json({ error: `<span class="text-secondary" style="font-size:16px">Please re-enter your email or password.</span>` });
         }
-        response.status(200).json({ success: `${email} logged in successfully!` });
+        response.status(200).json({ success: `${email} logged in successfully!`});
     } catch (error) {
         console.error('Error during signin:', error);
         response.status(500).json({ error: `<span class="text-secondary" style="font-size:16px">Please re-enter your email or password.</span>` });
@@ -77,17 +72,14 @@ memberController.post('/signin', async (request, response) => {
 });
 
 memberController.post('/signout', (request, response) => {
-    console.log('signing out')
     email = request.body.email
-    authenticated.splice(authenticated.indexOf(email), 1)
-    console.log("authenticated", authenticated)
     response
         .status(200)
         .json({
             success: {
-                email: email,
-                message: `${email} logout successfully.`,
+                success: `${email} logged out successfully!`,
             },
         })
+    console.log("signed out");
 })
 module.exports = memberController
